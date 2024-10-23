@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Performance Chart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .chart-container {
+            width: 80%;
+            margin: auto;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="chart-container">
+    <canvas id="performanceChart"></canvas>
+</div>
+
+<script>
+    // Ваши данные из Excel
+    const dates = [
+        '2019-12-03', '2020-01-03', '2020-02-04', '2020-03-03', '2020-04-02', 
+        '2020-05-04', '2020-06-02', '2020-07-02', '2020-08-04', '2020-09-02',
+        '2020-10-02', '2020-11-03', '2020-12-02', '2021-01-05', '2021-02-02', 
+        '2021-03-02', '2021-04-05', '2021-05-04', '2021-06-02', '2021-07-02',
+        '2021-08-03', '2021-09-02', '2021-10-04', '2021-11-02', '2021-12-02', 
+        '2022-01-04', '2022-02-02', '2022-03-02', '2022-04-04', '2022-05-03',
+        '2022-06-02', '2022-07-05', '2022-08-02', '2022-09-02', '2022-10-04',
+        '2022-11-02', '2022-12-02', '2023-01-04', '2023-02-02', '2023-03-02',
+        '2023-04-04', '2023-05-02', '2023-06-02', '2023-07-05', '2023-08-02',
+        '2023-09-05', '2023-10-03'
+    ];
+
+    const smartModelPortfolioReturns = [
+        0.00, 9.94, 9.70, 4.44, -6.53, 5.34, 18.30, 25.58, 37.56, 47.24,
+        37.69, 44.02, 67.15, 69.48, 79.54, 90.99, 109.78, 102.89, 109.90,
+        120.80, 119.62, 125.81, 109.05, 129.63, 137.09, 154.24, 140.73,
+        133.31, 142.11, 129.05, 142.59, 106.85, 137.81, 123.64, 119.78,
+        115.24, 145.39, 132.29, 179.30, 159.83, 157.58, 150.80, 165.41,
+        172.16, 197.30, 199.59
+    ];
+
+    const sp500Returns = [
+        0.00, 4.58, 6.61, -2.90, -18.31, -8.10, -0.40, 1.19, 6.90, 15.76,
+        8.25, 8.92, 18.62, 20.49, 23.70, 25.12, 31.83, 34.64, 36.04, 40.71,
+        42.99, 46.67, 39.03, 49.70, 47.97, 54.97, 48.37, 41.81, 48.15,
+        34.99, 35.03, 23.86, 32.26, 26.87, 22.56, 21.55, 31.63, 24.56,
+        35.13, 28.71, 32.57, 33.18, 38.44, 43.76, 45.91
+    ];
+
+    // Настройка графика
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    const performanceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [
+                {
+                    label: 'SmartModel Portfolio',
+                    data: smartModelPortfolioReturns,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    fill: false,
+                    tension: 0.4,
+                },
+                {
+                    label: 'S&P 500',
+                    data: sp500Returns,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    fill: false,
+                    tension: 0.4,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Portfolio Performance vs S&P 500'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y.toFixed(2) + '%';
+                            }
+                            return label;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top',
+                }
+            },
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'month',
+                        displayFormats: {
+                            month: 'MMM YYYY'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    },
+                    ticks: {
+                        autoSkip: true,
+                        maxTicksLimit: 12
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Cumulative Return (%)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

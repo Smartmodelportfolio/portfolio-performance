@@ -7,18 +7,18 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #000; /* Set black background */
+            background-color: #000; /* Black background */
             margin: 0;
             padding: 20px;
-            color: #fff; /* Set text to white */
         }
         .chart-container {
-            width: 80%;
+            width: 90%;  /* Adjust the width for better size */
+            height: 80vh; /* Use 80% of the viewport height */
             margin: auto;
-            padding: 20px;
-            background-color: #222; /* Slight contrast for the chart container */
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.3); /* Subtle glow */
+        }
+        canvas {
+            background-color: #222;  /* Dark background for the chart itself */
+            border-radius: 10px;     /* Rounded corners for better style */
         }
     </style>
     <!-- Include Chart.js -->
@@ -35,7 +35,7 @@
 <script>
     console.log('Chart.js loaded successfully.');
 
-    // Full date data from the Excel file
+    // Full date data
     const dates = [
         '2019-12-03', '2020-01-03', '2020-02-04', '2020-03-03', '2020-04-02', 
         '2020-05-04', '2020-06-02', '2020-07-02', '2020-08-04', '2020-09-02',
@@ -101,7 +101,7 @@
                 title: {
                     display: true,
                     text: 'Portfolio Performance vs S&P 500',
-                    color: '#fff' // White title color
+                    color: '#ffffff'  // White title
                 },
                 tooltip: {
                     mode: 'index',
@@ -122,7 +122,7 @@
                 legend: {
                     position: 'top',
                     labels: {
-                        color: '#fff' // White legend text
+                        color: '#ffffff'  // White legend labels
                     }
                 }
             },
@@ -142,10 +142,10 @@
                     title: {
                         display: true,
                         text: 'Date',
-                        color: '#fff' // White axis title
+                        color: '#ffffff'  // White axis title
                     },
                     ticks: {
-                        color: '#fff', // White axis labels
+                        color: '#ffffff',  // White axis labels
                         autoSkip: true,
                         maxTicksLimit: 12
                     }
@@ -154,12 +154,21 @@
                     title: {
                         display: true,
                         text: 'Cumulative Return (%)',
-                        color: '#fff' // White axis title
+                        color: '#ffffff'  // White axis title
                     },
                     ticks: {
-                        color: '#fff', // White axis labels
+                        color: '#ffffff',  // White axis labels
                         callback: function(value) {
                             return value + '%';
                         }
                     }
-               
+                }
+            }
+        }
+    });
+
+    console.log('Chart created successfully.');
+</script>
+
+</body>
+</html>

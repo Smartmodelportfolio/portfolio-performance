@@ -16,6 +16,7 @@
             margin: auto;
         }
     </style>
+    <!-- Подключение Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -25,6 +26,8 @@
 </div>
 
 <script>
+    console.log('Chart.js подключен успешно.');
+
     // Ваши данные из Excel
     const dates = [
         '2019-12-03', '2020-01-03', '2020-02-04', '2020-03-03', '2020-04-02', 
@@ -55,6 +58,11 @@
         34.99, 35.03, 23.86, 32.26, 26.87, 22.56, 21.55, 31.63, 24.56,
         35.13, 28.71, 32.57, 33.18, 38.44, 43.76, 45.91
     ];
+
+    // Проверим, загружены ли данные
+    console.log('Даты:', dates);
+    console.log('Доходность SmartModel Portfolio:', smartModelPortfolioReturns);
+    console.log('Доходность S&P 500:', sp500Returns);
 
     // Настройка графика
     const ctx = document.getElementById('performanceChart').getContext('2d');
@@ -144,6 +152,8 @@
             }
         }
     });
+
+    console.log('График успешно создан.');
 </script>
 
 </body>

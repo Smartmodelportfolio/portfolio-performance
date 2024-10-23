@@ -16,9 +16,9 @@
             margin: auto;
         }
     </style>
-    <!-- Подключение Chart.js -->
+    <!-- Include Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Подключение адаптера для дат -->
+    <!-- Include date adapter for time scales -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 </head>
 <body>
@@ -28,9 +28,9 @@
 </div>
 
 <script>
-    console.log('Chart.js подключен успешно.');
+    console.log('Chart.js loaded successfully.');
 
-    // Ваши данные из Excel
+    // Your date data
     const dates = [
         '2019-12-03', '2020-01-03', '2020-02-04', '2020-03-03', '2020-04-02', 
         '2020-05-04', '2020-06-02', '2020-07-02', '2020-08-04', '2020-09-02',
@@ -61,12 +61,12 @@
         35.13, 28.71, 32.57, 33.18, 38.44, 43.76, 45.91
     ];
 
-    // Проверим, загружены ли данные
-    console.log('Даты:', dates);
-    console.log('Доходность SmartModel Portfolio:', smartModelPortfolioReturns);
-    console.log('Доходность S&P 500:', sp500Returns);
+    // Ensure that the data is loaded correctly
+    console.log('Dates:', dates);
+    console.log('SmartModel Portfolio returns:', smartModelPortfolioReturns);
+    console.log('S&P 500 returns:', sp500Returns);
 
-    // Настройка графика
+    // Create the chart
     const ctx = document.getElementById('performanceChart').getContext('2d');
     const performanceChart = new Chart(ctx, {
         type: 'line',
@@ -128,7 +128,7 @@
                     time: {
                         unit: 'month',
                         displayFormats: {
-                            month: 'MMM YYYY'
+                            month: 'MMM yyyy'  // Use 'yyyy' instead of 'YYYY'
                         }
                     },
                     title: {
@@ -155,7 +155,7 @@
         }
     });
 
-    console.log('График успешно создан.');
+    console.log('Chart created successfully.');
 </script>
 
 </body>

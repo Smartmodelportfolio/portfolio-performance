@@ -7,13 +7,18 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #000; /* Set black background */
             margin: 0;
             padding: 20px;
+            color: #fff; /* Set text to white */
         }
         .chart-container {
             width: 80%;
             margin: auto;
+            padding: 20px;
+            background-color: #222; /* Slight contrast for the chart container */
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.3); /* Subtle glow */
         }
     </style>
     <!-- Include Chart.js -->
@@ -95,7 +100,8 @@
             plugins: {
                 title: {
                     display: true,
-                    text: 'Portfolio Performance vs S&P 500'
+                    text: 'Portfolio Performance vs S&P 500',
+                    color: '#fff' // White title color
                 },
                 tooltip: {
                     mode: 'index',
@@ -115,6 +121,9 @@
                 },
                 legend: {
                     position: 'top',
+                    labels: {
+                        color: '#fff' // White legend text
+                    }
                 }
             },
             interaction: {
@@ -132,9 +141,11 @@
                     },
                     title: {
                         display: true,
-                        text: 'Date'
+                        text: 'Date',
+                        color: '#fff' // White axis title
                     },
                     ticks: {
+                        color: '#fff', // White axis labels
                         autoSkip: true,
                         maxTicksLimit: 12
                     }
@@ -142,21 +153,13 @@
                 y: {
                     title: {
                         display: true,
-                        text: 'Cumulative Return (%)'
+                        text: 'Cumulative Return (%)',
+                        color: '#fff' // White axis title
                     },
                     ticks: {
+                        color: '#fff', // White axis labels
                         callback: function(value) {
                             return value + '%';
                         }
                     }
-                }
-            }
-        }
-    });
-
-    console.log('Chart created successfully.');
-</script>
-
-</body>
-</html>
-
+               

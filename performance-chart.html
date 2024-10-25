@@ -62,12 +62,12 @@
     ];
 
     const sp500Returns = [
-      0.00, 4.58, 6.61, -2.90, -18.31, -8.10, -0.40, 1.19, 6.90, 15.76, 
-      8.25, 8.92, 18.62, 20.49, 23.70, 25.12, 31.83, 34.64, 36.04, 40.71,
-      42.99, 46.67, 39.03, 49.70, 47.97, 54.97, 48.37, 41.81, 48.15, 34.99,
-      35.03, 23.86, 32.26, 26.87, 22.56, 21.55, 31.63, 24.56, 35.13, 28.71,
-      32.57, 33.18, 38.44, 43.76, 45.91, 45.38, 36.73, 39.59, 47.74, 52.10,
-      60.31, 65.88, 68.30, 63.72, 71.06, 78.10, 72.85, 78.46, 84.58
+        0.00, 4.58, 6.61, -2.90, -18.31, -8.10, -0.40, 1.19, 6.90, 15.76, 
+        8.25, 8.92, 18.62, 20.49, 23.70, 25.12, 31.83, 34.64, 36.04, 40.71,
+        42.99, 46.67, 39.03, 49.70, 47.97, 54.97, 48.37, 41.81, 48.15, 34.99,
+        35.03, 23.86, 32.26, 26.87, 22.56, 21.55, 31.63, 24.56, 35.13, 28.71,
+        32.57, 33.18, 38.44, 43.76, 45.91, 45.38, 36.73, 39.59, 47.74, 52.10,
+        60.31, 65.88, 68.30, 63.72, 71.06, 78.10, 72.85, 78.46, 84.58
     ];
 
     // Create the chart
@@ -139,11 +139,6 @@
                             month: 'MMM yyyy'  // Use 'MMM yyyy' to show only month and year, no time
                         }
                     },
-                    grid: {
-                        color: '#444444',  // Gridline color
-                        borderColor: '#ffffff',  // X-axis line color
-                        borderWidth: 2,  // X-axis line width
-                    },
                     title: {
                         display: true,
                         text: 'Date',
@@ -156,11 +151,7 @@
                     }
                 },
                 y: {
-                    grid: {
-                        color: '#444444',  // Gridline color
-                        borderColor: '#ffffff',  // Y-axis line color
-                        borderWidth: 2,  // Y-axis line width
-                    },
+                    beginAtZero: true, // Start Y-axis at 0
                     title: {
                         display: true,
                         text: 'Cumulative Return (%)',
@@ -170,6 +161,20 @@
                         color: '#ffffff',  // White axis labels
                         callback: function(value) {
                             return value + '%';
+                        }
+                    },
+                    grid: {
+                        color: function(context) {
+                            if (context.tick.value === 0) {
+                                return '#ffffff';  // White color for the zero grid line
+                            }
+                            return 'rgba(255,255,255,0.1)';  // Light gridlines for other grid lines
+                        },
+                        lineWidth: function(context) {
+                            if (context.tick.value === 0) {
+                                return 2;  // Thicker line for zero
+                            }
+                            return 1;
                         }
                     }
                 }

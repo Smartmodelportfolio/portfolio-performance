@@ -77,9 +77,114 @@
         60.31, 65.88, 68.30, 63.72, 71.06, 78.10, 72.85, 78.46, 84.58
     ];
 
-    // Создание графика
+    // Определяем настройки меток оси X в зависимости от ширины экрана
+    function getChartOptions() {
+        let maxTicksLimit;
+        let rotation;
+
+        if (window.innerWidth < 600) {
+            // Для мобильных устройств
+            maxTicksLimit = 12; // Оставляем количество меток прежним
+            rotation = 45;
+        } else {
+            // Для компьютеров
+            maxTicksLimit = 12;
+            rotation = 0;
+        }
+
+        return {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Portfolio Performance vs S&P 500',
+                    color: '#ffffff'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y.toFixed(2) + '%';
+                            }
+                            return label;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: '#ffffff'
+                    }
+                }
+            },
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'month',
+                        displayFormats: {
+                            month: 'MMM yyyy'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Date',
+                        color: '#ffffff'
+                    },
+                    ticks: {
+                        color: '#ffffff',
+                        autoSkip: true,
+                        maxTicksLimit: maxTicksLimit,
+                        maxRotation: rotation,
+                        minRotation: rotation
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Cumulative Return (%)',
+                        color: '#ffffff'
+                    },
+                    ticks: {
+                        color: '#ffffff',
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    },
+                    grid: {
+                        color: function(context) {
+                            if (context.tick.value === 0) {
+                                return '#ffffff';
+                            }
+                            return 'rgba(255,255,255,0.1)';
+                        },
+                        lineWidth: function(context) {
+                            if (context.tick.value === 0) {
+                                return 2;
+                            }
+                            return 1;
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    // Создание графика с начальными настройками
     const ctx = document.getElementById('performanceChart').getContext('2d');
-    const performanceChart = new Chart(ctx, {
+    let performanceChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: dates,
@@ -102,97 +207,17 @@
                 }
             ]
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false, // Для адаптивности графика
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Portfolio Performance vs S&P 500',
-                    color: '#ffffff'  // Белый заголовок
-                },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false,
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            if (context.parsed.y !== null) {
-                                label += context.parsed.y.toFixed(2) + '%';
-                            }
-                            return label;
-                        }
-                    }
-                },
-                legend: {
-                    position: 'top',
-                    labels: {
-                        color: '#ffffff'  // Белые подписи легенды
-                    }
-                }
-            },
-            interaction: {
-                mode: 'index',
-                intersect: false,
-            },
-            scales: {
-                x: {
-                    type: 'time',
-                    time: {
-                        unit: 'month',
-                        displayFormats: {
-                            month: 'MMM yyyy'  // Отображать только месяц и год
-                        }
-                    },
-                    title: {
-                        display: true,
-                        text: 'Date',
-                        color: '#ffffff'  // Белый заголовок оси
-                    },
-                    ticks: {
-                        color: '#ffffff',  // Белые метки оси
-                        autoSkip: true,
-                        maxTicksLimit: 12, // Оставляем количество меток прежним
-                        maxRotation: 45,   // Добавляем наклон меток
-                        minRotation: 45
-                    }
-                },
-                y: {
-                    beginAtZero: true, // Начинать ось Y с 0
-                    title: {
-                        display: true,
-                        text: 'Cumulative Return (%)',
-                        color: '#ffffff'  // Белый заголовок оси
-                    },
-                    ticks: {
-                        color: '#ffffff',  // Белые метки оси
-                        callback: function(value) {
-                            return value + '%';
-                        }
-                    },
-                    grid: {
-                        color: function(context) {
-                            if (context.tick.value === 0) {
-                                return '#ffffff';  // Белая линия для нуля
-                            }
-                            return 'rgba(255,255,255,0.1)';  // Светлые линии для остальных
-                        },
-                        lineWidth: function(context) {
-                            if (context.tick.value === 0) {
-                                return 2;  // Толще линия для нуля
-                            }
-                            return 1;
-                        }
-                    }
-                }
-            }
-        }
+        options: getChartOptions()
     });
 
     console.log('Chart created successfully.');
+
+    // Обработчик изменения размера окна для обновления настроек графика
+    window.addEventListener('resize', function() {
+        // Обновляем опции графика
+        performanceChart.options = getChartOptions();
+        performanceChart.update();
+    });
 </script>
 
 </body>

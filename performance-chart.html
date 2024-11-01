@@ -14,27 +14,28 @@
         .chart-container {
             position: relative;
             width: 100%;
+            max-width: 1200px; /* Максимальная ширина для больших экранов */
             margin: auto;
         }
         canvas {
             background-color: #222;  /* Темный фон для самого графика */
             border-radius: 10px;     /* Скругленные углы для стиля */
         }
-        /* Медиазапросы для различных размеров экранов */
-        @media (min-width: 1200px) {
+        /* Высота графика для разных устройств */
+        @media (min-width: 992px) {
             .chart-container {
-                max-width: 1200px; /* Максимальная ширина для больших экранов */
+                height: 600px; /* Увеличенная высота для компьютеров */
             }
         }
-        @media (min-width: 768px) and (max-width: 1199px) {
+        @media (min-width: 768px) and (max-width: 991px) {
             .chart-container {
-                max-width: 90%; /* Ширина для средних экранов */
+                height: 500px; /* Высота для планшетов */
             }
         }
         @media (max-width: 767px) {
             .chart-container {
-                height: 300px; /* Уменьшенная высота для мобильных */
-                max-width: 100%; /* Полная ширина для мобильных */
+                height: 400px; /* Высота для мобильных */
+                overflow-x: auto; /* Добавляем горизонтальную прокрутку для мобильных */
             }
         }
     </style>
@@ -98,7 +99,7 @@
             rotation = 45;
         } else {
             // Для компьютеров
-            maxTicksLimit = 12;
+            maxTicksLimit = 10; // Уменьшаем количество меток для лучшей читаемости
             rotation = 0;
         }
 

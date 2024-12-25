@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Performance Chart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000; /* Black background */
+            margin: 0;
+            padding: 20px;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px; /* Maximum width for larger screens */
+            margin: auto;
+        }
+        canvas {
+            background-color: #222;  /* Dark background for the chart */
+            border-radius: 10px;     /* Rounded corners for style */
+        }
+    </style>
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include date-fns adapter for time scales -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+</head>
+<body>
+
+<div class="chart-container">
+    <canvas id="performanceChart"></canvas>
+</div>
+
+<script>
+    // Data
+    const dates = [
+        "23.12.2024", "16.12.2024", "09.12.2024", "02.12.2024", "25.11.2024",
+        // Add all your dates here...
+    ];
+
+    const spyReturns = [112.24, 116.56, 115.80, 115.43, 113.25];
+    const ssoReturns = [222.46, 235.09, 233.20, 232.46, 226.07];
+    const sentimentStrategy = [366.02, 375.50, 373.84, 373.02, 368.24];
+    const sentimentIndicator = [104.5, 113.7, 117.2, 116.1, 106.8];
+
+    // Chart configuration
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [
+                {
+                    label: 'SPY ETF',
+                    data: spyReturns,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    fill: false,
+                    tension: 0.4,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'SSO ETF',
+                    data: ssoReturns,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    fill: false,
+                    tension: 0.4,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'Sentiment Strategy',
+                    data: sentimentStrategy,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: false,
+                    tension: 0.4,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'Sentiment Strategy Indicator',
+                    data: sentimentIndicator,
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                    fill: false,
+                    tension: 0.4,
+                    yAxisID: 'y2'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Performance Chart',
+                    color: '#ffffff'
+                },
+                legend: {
+                    labels: {
+                        color: '#ffffff'
+                    }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            scales: {
+                x: {
+                    type: 'category',
+                    title: {
+                        display: true,
+                        text: 'Date',
+                        color: '#ffffff'
+                    },
+                    ticks: {
+                        color: '#ffffff'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Performance (%)',
+                        color: '#ffffff'
+                    },
+                    ticks: {
+                        color: '#ffffff',
+                        callback: value => `${value}%`
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
+                    }
+                },
+                y2: {
+                    position: 'right',
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Sentiment Indicator',
+                        color: '#ffffff'
+                    },
+                    ticks: {
+                        color: '#ffffff',
+                        callback: value => `${value}%`
+                    },
+                    grid: {
+                        drawOnChartArea: false
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

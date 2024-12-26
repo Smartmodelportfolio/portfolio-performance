@@ -294,6 +294,8 @@ const sentimentIndicator = [
                     }
                 },
                 tooltip: {
+                    mode: 'index',
+                    intersect: false,
                     callbacks: {
                         label: (context) => `${context.dataset.label}: ${context.parsed.y.toFixed(2)}%`
                     }
@@ -337,7 +339,7 @@ const sentimentIndicator = [
         }
     };
 
-    // Chart configuration for the sentiment indicator chart
+    // Sentiment Indicator chart configuration
     const sentimentIndicatorChartConfig = {
         type: 'line',
         data: {
@@ -353,7 +355,7 @@ const sentimentIndicator = [
                     pointRadius: 2
                 },
                 {
-                    label: 'Highlight Line',
+                    label: 'Level 50',
                     data: Array(dates.length).fill(50),
                     borderColor: 'rgba(255, 0, 0, 0.5)',
                     borderDash: [5, 5],
@@ -373,15 +375,12 @@ const sentimentIndicator = [
                     color: '#ffffff'
                 },
                 legend: {
-                    labels: {
-                        filter: (item) => item.text !== 'Highlight Line',
-                        color: '#ffffff'
-                    }
+                    display: false
                 },
                 tooltip: {
                     callbacks: {
                         label: (context) => {
-                            if (context.dataset.label === 'Highlight Line') return null;
+                            if (context.dataset.label === 'Level 50') return null;
                             return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}`;
                         }
                     }
@@ -415,7 +414,7 @@ const sentimentIndicator = [
                     },
                     ticks: {
                         color: '#ffffff',
-                        callback: (value) => (value === 50 ? '50 (level)' : value)
+                        callback: value => (value === 50 ? '50 (level)' : value)
                     },
                     grid: {
                         color: 'rgba(255,255,255,0.1)'

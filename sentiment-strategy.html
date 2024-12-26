@@ -256,8 +256,7 @@ const sentimentIndicator = [
                     borderColor: 'rgba(75, 192, 192, 1)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     fill: false,
-                    tension: 0.4,
-                    pointRadius: 2
+                    tension: 0.4
                 },
                 {
                     label: 'SSO ETF',
@@ -265,8 +264,7 @@ const sentimentIndicator = [
                     borderColor: 'rgba(54, 162, 235, 1)',
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     fill: false,
-                    tension: 0.4,
-                    pointRadius: 2
+                    tension: 0.4
                 },
                 {
                     label: 'SPY ETF',
@@ -274,8 +272,7 @@ const sentimentIndicator = [
                     borderColor: 'rgba(255, 99, 132, 1)',
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     fill: false,
-                    tension: 0.4,
-                    pointRadius: 2
+                    tension: 0.4
                 }
             ]
         },
@@ -297,7 +294,7 @@ const sentimentIndicator = [
                     mode: 'index',
                     intersect: false,
                     callbacks: {
-                        label: (context) => {
+                        label: function(context) {
                             return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}%`;
                         }
                     }
@@ -341,7 +338,7 @@ const sentimentIndicator = [
         }
     };
 
-    // Sentiment Indicator chart configuration
+    // Chart configuration for the sentiment indicator chart
     const sentimentIndicatorChartConfig = {
         type: 'line',
         data: {
@@ -353,16 +350,16 @@ const sentimentIndicator = [
                     borderColor: 'rgba(255, 206, 86, 1)',
                     backgroundColor: 'rgba(255, 206, 86, 0.2)',
                     fill: false,
-                    tension: 0.4,
-                    pointRadius: 2
+                    tension: 0.4
                 },
                 {
-                    label: 'Highlight Line',
-                    data: Array(dates.length).fill(50),
+                    label: 'Key Level', // Переименовано с "Highlight Line"
+                    data: new Array(dates.length).fill(50),
                     borderColor: 'rgba(255, 255, 255, 0.5)',
                     borderWidth: 1,
                     borderDash: [5, 5],
-                    pointRadius: 0
+                    pointRadius: 0,
+                    fill: false
                 }
             ]
         },
@@ -376,14 +373,22 @@ const sentimentIndicator = [
                     color: '#ffffff'
                 },
                 legend: {
-                    display: false
+                    labels: {
+                        filter: function(item) {
+                            return item.text !== 'Key Level'; // Убираем "Key Level" из легенды
+                        },
+                        color: '#ffffff'
+                    }
                 },
                 tooltip: {
+                    mode: 'index',
+                    intersect: false,
                     callbacks: {
-                        label: (context) => {
+                        label: function(context) {
                             if (context.dataset.label === 'Sentiment Indicator') {
-                                return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}`;
+                                return `${context.parsed.y.toFixed(2)}%`;
                             }
+                            return ''; // Не показываем информацию для линии уровня
                         }
                     }
                 }

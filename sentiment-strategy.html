@@ -253,7 +253,7 @@ const sentimentIndicator = [
                     data: spyReturns,
                     borderColor: 'rgba(255, 99, 132, 1)',
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    pointRadius: 3, // Уменьшено на 35% от стандартного 5
+                    pointRadius: 2,
                     fill: false,
                     tension: 0.4
                 },
@@ -262,7 +262,7 @@ const sentimentIndicator = [
                     data: ssoReturns,
                     borderColor: 'rgba(54, 162, 235, 1)',
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    pointRadius: 3,
+                    pointRadius: 2,
                     fill: false,
                     tension: 0.4
                 },
@@ -271,7 +271,7 @@ const sentimentIndicator = [
                     data: sentimentStrategy,
                     borderColor: 'rgba(75, 192, 192, 1)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    pointRadius: 3,
+                    pointRadius: 2,
                     fill: false,
                     tension: 0.4
                 }
@@ -292,7 +292,7 @@ const sentimentIndicator = [
                     }
                 },
                 tooltip: {
-                    mode: 'index', // Показывает данные для всех портфелей
+                    mode: 'index',
                     intersect: false
                 }
             },
@@ -344,18 +344,21 @@ const sentimentIndicator = [
                     data: sentimentIndicator,
                     borderColor: 'rgba(255, 206, 86, 1)',
                     backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                    pointRadius: 3,
+                    pointRadius: 2,
                     fill: false,
                     tension: 0.4
                 },
                 {
-                    label: 'Highlight Line',
-                    data: Array(dates.length).fill(50), // Уровень 50
+                    label: '',
+                    data: Array(dates.length).fill(50),
                     borderColor: 'rgba(255, 0, 0, 0.8)',
                     borderWidth: 2,
                     pointRadius: 0,
-                    borderDash: [5, 5], // Пунктирная линия
-                    fill: false
+                    borderDash: [5, 5],
+                    fill: false,
+                    tooltip: {
+                        enabled: false // Отключено отображение в tooltip
+                    }
                 }
             ]
         },
@@ -369,9 +372,7 @@ const sentimentIndicator = [
                     color: '#ffffff'
                 },
                 legend: {
-                    labels: {
-                        color: '#ffffff'
-                    }
+                    display: false // Убрана легенда для Highlight Line
                 },
                 tooltip: {
                     mode: 'index',
@@ -405,7 +406,8 @@ const sentimentIndicator = [
                         color: '#ffffff'
                     },
                     ticks: {
-                        color: '#ffffff'
+                        color: '#ffffff',
+                        callback: value => value === 50 ? '50 (Highlight)' : value
                     },
                     grid: {
                         color: 'rgba(255,255,255,0.1)'

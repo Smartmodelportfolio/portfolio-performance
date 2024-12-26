@@ -251,10 +251,10 @@ const sentimentIndicator = [
             labels: dates,
             datasets: [
                 {
-                    label: 'SPY ETF',
-                    data: spyReturns,
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    label: 'Sentiment Strategy',
+                    data: sentimentStrategy,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     fill: false,
                     tension: 0.4,
                     pointRadius: 2
@@ -269,10 +269,10 @@ const sentimentIndicator = [
                     pointRadius: 2
                 },
                 {
-                    label: 'Sentiment Strategy',
-                    data: sentimentStrategy,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    label: 'SPY ETF',
+                    data: spyReturns,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     fill: false,
                     tension: 0.4,
                     pointRadius: 2
@@ -297,7 +297,9 @@ const sentimentIndicator = [
                     mode: 'index',
                     intersect: false,
                     callbacks: {
-                        label: (context) => `${context.dataset.label}: ${context.parsed.y.toFixed(2)}%`
+                        label: (context) => {
+                            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}%`;
+                        }
                     }
                 }
             },
@@ -355,13 +357,12 @@ const sentimentIndicator = [
                     pointRadius: 2
                 },
                 {
-                    label: 'Level 50',
+                    label: 'Highlight Line',
                     data: Array(dates.length).fill(50),
-                    borderColor: 'rgba(255, 0, 0, 0.5)',
-                    borderDash: [5, 5],
+                    borderColor: 'rgba(255, 255, 255, 0.5)',
                     borderWidth: 1,
-                    pointRadius: 0,
-                    fill: false
+                    borderDash: [5, 5],
+                    pointRadius: 0
                 }
             ]
         },
@@ -380,8 +381,9 @@ const sentimentIndicator = [
                 tooltip: {
                     callbacks: {
                         label: (context) => {
-                            if (context.dataset.label === 'Level 50') return null;
-                            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}`;
+                            if (context.dataset.label === 'Sentiment Indicator') {
+                                return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}`;
+                            }
                         }
                     }
                 }
@@ -413,8 +415,7 @@ const sentimentIndicator = [
                         color: '#ffffff'
                     },
                     ticks: {
-                        color: '#ffffff',
-                        callback: value => (value === 50 ? '50 (level)' : value)
+                        color: '#ffffff'
                     },
                     grid: {
                         color: 'rgba(255,255,255,0.1)'

@@ -18,17 +18,15 @@
             margin: auto;
         }
         .chart {
-            height: 400px; /* Each chart has a fixed height */
-            margin-bottom: 40px; /* Space between the charts */
+            height: 400px;
+            margin-bottom: 40px;
         }
         canvas {
             background-color: #222;
             border-radius: 10px;
         }
     </style>
-    <!-- Include Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Include date-fns adapter for time scales -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 </head>
 <body>
@@ -255,6 +253,7 @@ const sentimentIndicator = [
                     data: spyReturns,
                     borderColor: 'rgba(255, 99, 132, 1)',
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    pointRadius: 3, // Уменьшено на 35% от стандартного 5
                     fill: false,
                     tension: 0.4
                 },
@@ -263,6 +262,7 @@ const sentimentIndicator = [
                     data: ssoReturns,
                     borderColor: 'rgba(54, 162, 235, 1)',
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    pointRadius: 3,
                     fill: false,
                     tension: 0.4
                 },
@@ -271,6 +271,7 @@ const sentimentIndicator = [
                     data: sentimentStrategy,
                     borderColor: 'rgba(75, 192, 192, 1)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    pointRadius: 3,
                     fill: false,
                     tension: 0.4
                 }
@@ -289,6 +290,10 @@ const sentimentIndicator = [
                     labels: {
                         color: '#ffffff'
                     }
+                },
+                tooltip: {
+                    mode: 'index', // Показывает данные для всех портфелей
+                    intersect: false
                 }
             },
             scales: {
@@ -329,7 +334,6 @@ const sentimentIndicator = [
         }
     };
 
-    // Chart configuration for the sentiment indicator chart
     const sentimentIndicatorChartConfig = {
         type: 'line',
         data: {
@@ -340,8 +344,18 @@ const sentimentIndicator = [
                     data: sentimentIndicator,
                     borderColor: 'rgba(255, 206, 86, 1)',
                     backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                    pointRadius: 3,
                     fill: false,
                     tension: 0.4
+                },
+                {
+                    label: 'Highlight Line',
+                    data: Array(dates.length).fill(50), // Уровень 50
+                    borderColor: 'rgba(255, 0, 0, 0.8)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    borderDash: [5, 5], // Пунктирная линия
+                    fill: false
                 }
             ]
         },
@@ -358,6 +372,10 @@ const sentimentIndicator = [
                     labels: {
                         color: '#ffffff'
                     }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
                 }
             },
             scales: {
@@ -397,7 +415,6 @@ const sentimentIndicator = [
         }
     };
 
-    // Render charts
     new Chart(document.getElementById('performanceChart'), performanceChartConfig);
     new Chart(document.getElementById('sentimentIndicatorChart'), sentimentIndicatorChartConfig);
 </script>

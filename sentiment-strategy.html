@@ -18,15 +18,17 @@
             margin: auto;
         }
         .chart {
-            height: 400px;
-            margin-bottom: 40px;
+            height: 400px; /* Each chart has a fixed height */
+            margin-bottom: 40px; /* Space between the charts */
         }
         canvas {
             background-color: #222;
             border-radius: 10px;
         }
     </style>
+    <!-- Include Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include date-fns adapter for time scales -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 </head>
 <body>
@@ -253,27 +255,27 @@ const sentimentIndicator = [
                     data: spyReturns,
                     borderColor: 'rgba(255, 99, 132, 1)',
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    pointRadius: 2,
                     fill: false,
-                    tension: 0.4
+                    tension: 0.4,
+                    pointRadius: 2
                 },
                 {
                     label: 'SSO ETF',
                     data: ssoReturns,
                     borderColor: 'rgba(54, 162, 235, 1)',
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    pointRadius: 2,
                     fill: false,
-                    tension: 0.4
+                    tension: 0.4,
+                    pointRadius: 2
                 },
                 {
                     label: 'Sentiment Strategy',
                     data: sentimentStrategy,
                     borderColor: 'rgba(75, 192, 192, 1)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    pointRadius: 2,
                     fill: false,
-                    tension: 0.4
+                    tension: 0.4,
+                    pointRadius: 2
                 }
             ]
         },
@@ -292,8 +294,9 @@ const sentimentIndicator = [
                     }
                 },
                 tooltip: {
-                    mode: 'index',
-                    intersect: false
+                    callbacks: {
+                        label: (context) => `${context.dataset.label}: ${context.parsed.y.toFixed(2)}%`
+                    }
                 }
             },
             scales: {
@@ -334,6 +337,7 @@ const sentimentIndicator = [
         }
     };
 
+    // Chart configuration for the sentiment indicator chart
     const sentimentIndicatorChartConfig = {
         type: 'line',
         data: {
@@ -344,21 +348,18 @@ const sentimentIndicator = [
                     data: sentimentIndicator,
                     borderColor: 'rgba(255, 206, 86, 1)',
                     backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                    pointRadius: 2,
                     fill: false,
-                    tension: 0.4
+                    tension: 0.4,
+                    pointRadius: 2
                 },
                 {
-                    label: '',
+                    label: 'Highlight Line',
                     data: Array(dates.length).fill(50),
-                    borderColor: 'rgba(255, 0, 0, 0.8)',
-                    borderWidth: 2,
-                    pointRadius: 0,
+                    borderColor: 'rgba(255, 0, 0, 0.5)',
                     borderDash: [5, 5],
-                    fill: false,
-                    tooltip: {
-                        enabled: false // Отключено отображение в tooltip
-                    }
+                    borderWidth: 1,
+                    pointRadius: 0,
+                    fill: false
                 }
             ]
         },
@@ -372,11 +373,18 @@ const sentimentIndicator = [
                     color: '#ffffff'
                 },
                 legend: {
-                    display: false // Убрана легенда для Highlight Line
+                    labels: {
+                        filter: (item) => item.text !== 'Highlight Line',
+                        color: '#ffffff'
+                    }
                 },
                 tooltip: {
-                    mode: 'index',
-                    intersect: false
+                    callbacks: {
+                        label: (context) => {
+                            if (context.dataset.label === 'Highlight Line') return null;
+                            return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}`;
+                        }
+                    }
                 }
             },
             scales: {
@@ -407,7 +415,7 @@ const sentimentIndicator = [
                     },
                     ticks: {
                         color: '#ffffff',
-                        callback: value => value === 50 ? '50 (Highlight)' : value
+                        callback: (value) => (value === 50 ? '50 (level)' : value)
                     },
                     grid: {
                         color: 'rgba(255,255,255,0.1)'
@@ -417,6 +425,7 @@ const sentimentIndicator = [
         }
     };
 
+    // Render charts
     new Chart(document.getElementById('performanceChart'), performanceChartConfig);
     new Chart(document.getElementById('sentimentIndicatorChart'), sentimentIndicatorChartConfig);
 </script>

@@ -7,21 +7,23 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #000; /* Black background */
+            background-color: #000;
             margin: 0;
             padding: 20px;
         }
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 1200px; /* Maximum width for larger screens */
+            max-width: 1200px;
             margin: auto;
-            padding: 20px 0; /* Add padding between charts */
+        }
+        .chart {
+            height: 400px; /* Each chart has a fixed height */
+            margin-bottom: 40px; /* Space between the charts */
         }
         canvas {
-            background-color: #222;  /* Dark background for the chart */
-            border-radius: 10px;     /* Rounded corners for style */
-            height: 400px;          /* Fixed height to prevent compression */
+            background-color: #222;
+            border-radius: 10px;
         }
     </style>
     <!-- Include Chart.js -->
@@ -32,34 +34,36 @@
 <body>
 
 <div class="chart-container">
-    <canvas id="performanceChart"></canvas>
-</div>
-<div class="chart-container">
-    <canvas id="sentimentChart"></canvas>
+    <div class="chart">
+        <canvas id="performanceChart"></canvas>
+    </div>
+    <div class="chart">
+        <canvas id="sentimentIndicatorChart"></canvas>
+    </div>
 </div>
 
 <script>
     // Data
     const dates = [
-        "2024-12-23", "2024-12-16", "2024-12-09", "2024-12-02", "2024-11-25", 
-        "2024-11-18", "2024-11-11", "2024-11-04", "2024-10-28", "2024-10-21", 
-        "2024-10-14", "2024-10-07", "2024-09-30", "2024-09-23", "2024-09-16", 
+        "2024-12-23", "2024-12-16", "2024-12-09", "2024-12-02", "2024-11-25",
+        "2024-11-18", "2024-11-11", "2024-11-04", "2024-10-28", "2024-10-21",
+        "2024-10-14", "2024-10-07", "2024-09-30", "2024-09-23", "2024-09-16",
         "2024-09-09", "2024-09-03", "2024-08-26", "2024-08-19", "2024-08-12"
     ];
 
-    const spyReturns = [112.24, 116.56, 115.80, 115.43, 113.25, 109.90, 113.69, 103.36, 107.29, 108.29, 108.54, 
+    const spyReturns = [112.24, 116.56, 115.80, 115.43, 113.25, 109.90, 113.69, 103.36, 107.29, 108.29, 108.54,
         102.64, 104.77, 103.31, 100.87, 95.01, 97.03, 100.14, 99.72, 90.32];
 
-    const ssoReturns = [222.46, 235.09, 233.20, 232.46, 226.07, 216.48, 228.37, 198.04, 210.13, 213.64, 214.69, 
+    const ssoReturns = [222.46, 235.09, 233.20, 232.46, 226.07, 216.48, 228.37, 198.04, 210.13, 213.64, 214.69,
         197.70, 204.53, 200.88, 192.47, 175.95, 182.24, 191.73, 190.95, 164.67];
 
-    const sentimentStrategy = [366.02, 375.50, 373.84, 373.02, 368.24, 360.89, 369.20, 346.52, 355.15, 357.35, 357.89, 
+    const sentimentStrategy = [366.02, 375.50, 373.84, 373.02, 368.24, 360.89, 369.20, 346.52, 355.15, 357.35, 357.89,
         344.94, 349.61, 346.41, 341.06, 316.15, 325.62, 339.94, 338.76, 299.14];
 
-    const sentimentIndicator = [104.5, 113.7, 117.2, 116.1, 106.8, 100.1, 98.0, 95.9, 99.0, 100.1, 99.5, 94.5, 89.1, 
+    const sentimentIndicator = [104.5, 113.7, 117.2, 116.1, 106.8, 100.1, 98.0, 95.9, 99.0, 100.1, 99.5, 94.5, 89.1,
         85.0, 82.0, 41.1, 38.4, 34.2, 34.7, 37.7];
 
-    // Chart configurations
+    // Chart configuration for the performance chart
     const performanceChartConfig = {
         type: 'line',
         data: {
@@ -104,19 +108,16 @@
                     labels: {
                         color: '#ffffff'
                     }
-                },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false
                 }
             },
             scales: {
                 x: {
                     type: 'time',
                     time: {
-                        unit: 'week',
+                        unit: 'month',
+                        tooltipFormat: 'MM/dd/yyyy',
                         displayFormats: {
-                            week: 'yyyy-MM-dd'
+                            month: 'MM/yyyy'
                         }
                     },
                     title: {
@@ -147,7 +148,8 @@
         }
     };
 
-    const sentimentChartConfig = {
+    // Chart configuration for the sentiment indicator chart
+    const sentimentIndicatorChartConfig = {
         type: 'line',
         data: {
             labels: dates,
@@ -175,19 +177,16 @@
                     labels: {
                         color: '#ffffff'
                     }
-                },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false
                 }
             },
             scales: {
                 x: {
                     type: 'time',
                     time: {
-                        unit: 'week',
+                        unit: 'month',
+                        tooltipFormat: 'MM/dd/yyyy',
                         displayFormats: {
-                            week: 'yyyy-MM-dd'
+                            month: 'MM/yyyy'
                         }
                     },
                     title: {
@@ -207,8 +206,7 @@
                         color: '#ffffff'
                     },
                     ticks: {
-                        color: '#ffffff',
-                        callback: value => `${value}%`
+                        color: '#ffffff'
                     },
                     grid: {
                         color: 'rgba(255,255,255,0.1)'
@@ -218,10 +216,11 @@
         }
     };
 
-    // Initialize charts
-    new Chart(document.getElementById('performanceChart').getContext('2d'), performanceChartConfig);
-    new Chart(document.getElementById('sentimentChart').getContext('2d'), sentimentChartConfig);
+    // Render charts
+    new Chart(document.getElementById('performanceChart'), performanceChartConfig);
+    new Chart(document.getElementById('sentimentIndicatorChart'), sentimentIndicatorChartConfig);
 </script>
 
 </body>
 </html>
+

@@ -3,114 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Performance Chart with Indicator</title>
+    <title>Dual Performance Chart</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #000; /* Black background */
+            background-color: #000;
             margin: 0;
             padding: 20px;
         }
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 1200px; /* Maximum width for larger screens */
+            max-width: 1200px;
             margin: auto;
-            height: 400px; /* Height for each chart container */
         }
         canvas {
-            background-color: #222; /* Dark background for the chart */
+            background-color: #222;
             border-radius: 10px;
         }
     </style>
+    <!-- Include Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 </head>
 <body>
 
 <div class="chart-container">
-    <canvas id="mainChart"></canvas>
+    <canvas id="performanceChart"></canvas>
 </div>
-<div class="chart-container" style="margin-top: 20px;">
-    <canvas id="indicatorChart"></canvas>
+<div class="chart-container" style="margin-top: 40px;">
+    <canvas id="sentimentChart"></canvas>
 </div>
 
 <script>
     // Data
     const dates = [
-        "2024-12-23", "2024-12-16", "2024-12-09", "2024-12-02", "2024-11-25",
-        "2024-11-18", "2024-11-11", "2024-11-04", "2024-10-28", "2024-10-21",
-        "2024-10-14", "2024-10-07", "2024-09-30", "2024-09-23", "2024-09-16",
-        "2024-09-09", "2024-09-03", "2024-08-26", "2024-08-19", "2024-08-12",
-        "2024-08-05"
+        "2024-12-23", "2024-12-16", "2024-12-09", "2024-12-02", "2024-11-25", 
+        "2024-11-18", "2024-11-11", "2024-11-04", "2024-10-28", "2024-10-21", 
+        "2024-10-14", "2024-10-07", "2024-09-30", "2024-09-23", "2024-09-16", 
+        "2024-09-09", "2024-09-03", "2024-08-26", "2024-08-19", "2024-08-12"
     ];
 
     const spyReturns = [112.24, 116.56, 115.80, 115.43, 113.25, 109.90, 113.69, 103.36, 107.29, 108.29, 
-        108.54, 102.64, 104.77, 103.31, 100.87, 95.01, 97.03, 100.14, 99.72, 90.32, 84.65];
+                        108.54, 102.64, 104.77, 103.31, 100.87, 95.01, 97.03, 100.14, 99.72, 90.32];
 
     const ssoReturns = [222.46, 235.09, 233.20, 232.46, 226.07, 216.48, 228.37, 198.04, 210.13, 213.64, 
-        214.69, 197.70, 204.53, 200.88, 192.47, 175.95, 182.24, 191.73, 190.95, 164.67, 149.65];
+                        214.69, 197.70, 204.53, 200.88, 192.47, 175.95, 182.24, 191.73, 190.95, 164.67];
 
-    const sentimentStrategy = [366.02, 375.50, 373.84, 373.02, 368.24, 360.89, 369.20, 346.52, 355.15, 
-        357.35, 357.89, 344.94, 349.61, 346.41, 341.06, 316.15, 325.62, 339.94, 338.76, 299.14, 276.48];
+    const sentimentStrategy = [366.02, 375.50, 373.84, 373.02, 368.24, 360.89, 369.20, 346.52, 355.15, 357.35, 
+                               357.89, 344.94, 349.61, 346.41, 341.06, 316.15, 325.62, 339.94, 338.76, 299.14];
 
     const sentimentIndicator = [104.5, 113.7, 117.2, 116.1, 106.8, 100.1, 98.0, 95.9, 99.0, 100.1, 
-        99.5, 94.5, 89.1, 85.0, 82.0, 41.1, 38.4, 34.2, 34.7, 37.7, 40.5];
+                                99.5, 94.5, 89.1, 85.0, 82.0, 41.1, 38.4, 34.2, 34.7, 37.7];
 
-    // Chart configuration
-    const commonOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                labels: {
+    // Chart options
+    function getChartOptions(titleText, yLabel, isSecondary = false) {
+        return {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: titleText,
                     color: '#ffffff'
+                },
+                legend: {
+                    labels: {
+                        color: '#ffffff'
+                    }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
                 }
             },
-            tooltip: {
+            interaction: {
                 mode: 'index',
                 intersect: false
-            }
-        },
-        scales: {
-            x: {
-                type: 'time', // Time-based scale
-                time: {
-                    unit: 'week',
-                    displayFormats: {
-                        week: 'MMM dd, yyyy' // Format for the labels
-                    }
-                },
-                title: {
-                    display: true,
-                    text: 'Date',
-                    color: '#ffffff'
-                },
-                ticks: {
-                    color: '#ffffff',
-                    autoSkip: true // Skip labels for better readability
-                }
             },
-            y: {
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: 'Performance (%)',
-                    color: '#ffffff'
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                        displayFormats: {
+                            day: 'yyyy-MM-dd'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Date',
+                        color: '#ffffff'
+                    },
+                    ticks: {
+                        color: '#ffffff'
+                    }
                 },
-                ticks: {
-                    color: '#ffffff',
-                    callback: function(value) {
-                        return value + '%';
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: yLabel,
+                        color: '#ffffff'
+                    },
+                    ticks: {
+                        color: '#ffffff',
+                        callback: value => `${value}%`
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
                     }
                 }
             }
-        }
-    };
+        };
+    }
 
-    // Main chart (Performance chart)
-    const mainCtx = document.getElementById('mainChart').getContext('2d');
-    new Chart(mainCtx, {
+    // Create performance chart
+    const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+    new Chart(performanceCtx, {
         type: 'line',
         data: {
             labels: dates,
@@ -119,6 +129,7 @@
                     label: 'SPY ETF',
                     data: spyReturns,
                     borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     fill: false,
                     tension: 0.4
                 },
@@ -126,6 +137,7 @@
                     label: 'SSO ETF',
                     data: ssoReturns,
                     borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     fill: false,
                     tension: 0.4
                 },
@@ -133,17 +145,18 @@
                     label: 'Sentiment Strategy',
                     data: sentimentStrategy,
                     borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     fill: false,
                     tension: 0.4
                 }
             ]
         },
-        options: commonOptions
+        options: getChartOptions('Performance Chart', 'Performance (%)')
     });
 
-    // Indicator chart (Sentiment Indicator)
-    const indicatorCtx = document.getElementById('indicatorChart').getContext('2d');
-    new Chart(indicatorCtx, {
+    // Create sentiment indicator chart
+    const sentimentCtx = document.getElementById('sentimentChart').getContext('2d');
+    new Chart(sentimentCtx, {
         type: 'line',
         data: {
             labels: dates,
@@ -152,25 +165,13 @@
                     label: 'Sentiment Indicator',
                     data: sentimentIndicator,
                     borderColor: 'rgba(255, 206, 86, 1)',
-                    fill: true,
+                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                    fill: false,
                     tension: 0.4
                 }
             ]
         },
-        options: {
-            ...commonOptions,
-            scales: {
-                ...commonOptions.scales,
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Sentiment Indicator',
-                        color: '#ffffff'
-                    }
-                }
-            }
-        }
+        options: getChartOptions('Sentiment Indicator Chart', 'Sentiment Indicator')
     });
 </script>
 
